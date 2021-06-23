@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "TZ='Asia/Tokyo' jest"
+    "test": "TZ='Asia/Tokyo' jest",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
   },
   "author": "",
   "license": "ISC",
