@@ -14,8 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "jest": "^27.0.5",
-    "serve": "^12.0.0",
-    "xvfb": "^0.4.0"
+    "serve": "^12.0.0"
   },
   "devDependencies": {
     "cypress": "^7.5.0"
