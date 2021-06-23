@@ -1,4 +1,4 @@
-const double = require('./double');
+const double = require('../src/double');
 
 describe('double', () => {
     test('double 2 to equal 4',() => {

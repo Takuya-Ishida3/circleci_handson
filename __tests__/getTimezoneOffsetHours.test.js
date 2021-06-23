@@ -1,5 +1,4 @@
-const { TestWatcher } = require("@jest/core");
-const getTimezoneOffsetHours = require("./getTimezoneOffsetHours");
+const getTimezoneOffsetHours = require("../src/getTimezoneOffsetHours");
 
 describe("getTimezoneOffsetHours", () => {
   test("getTimezoneOffsetHours return -540", () => {
