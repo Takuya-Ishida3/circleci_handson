@@ -5,8 +5,26 @@ jobs:
       - image: cimg/node:lts
     steps:
       - checkout
-      - run: npm install
-      - run: npm run test
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Run unit test
+          command: npm run test
+      - run:
+          name: verify Cypress is installed correctly
+          command: npm run cy:verify
+      - run:
+          name: Create cypress.json
+          command: |
+              echo "{\n\"projectId\": \"${CYPRESS_PROJECT_ID}\"\n}" > cypress.json 
+      - run:
+          name: Start server before starting tests
+          command: npm run start:ci
+          background: true
+      - run:
+          name: Run e2e test
+          command: cypress run --record --key ${CYPRESS_RECORD_KEY}
 orbs:
   aws-ecr: circleci/aws-ecr@6.10.0
   aws-ecs: circleci/aws-ecs@1.2.0
