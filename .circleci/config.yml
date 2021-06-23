@@ -1,10 +1,22 @@
 version: 2.1
+jobs:
+  build_test:
+    docker: 
+      - image: cimg/node:lts
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run test
 orbs:
   aws-ecr: circleci/aws-ecr@6.10.0
 workflows:
   build-and-deploy:
     jobs:
+      - build_test
       - aws-ecr/build-and-push-image:
           account-url: AWS_ECR_ACCOUNT_URL
           repo: 'nginx'
           tag: '${CIRCLE_SHA1}'
+          requires:
+            - build_test
+      
