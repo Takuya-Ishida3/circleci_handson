@@ -9,6 +9,7 @@ jobs:
       - run: npm run test
 orbs:
   aws-ecr: circleci/aws-ecr@6.10.0
+  aws-ecs: circleci/aws-ecs@1.2.0
 workflows:
   build-and-deploy:
     jobs:
@@ -19,4 +20,10 @@ workflows:
           tag: '${CIRCLE_SHA1}'
           requires:
             - build_test
-      
+      - aws-ecs/deploy-service-update:
+          requires:
+            - aws-ecr/build-and-push-image
+          family: 'circleci-book-task'
+          service-name: 'circleci-book-service'
+          cluster-name: 'circleci-book-cluster'
+          container-image-name-updates: 'container=circleci-book-container,image-and-tag=${AWS_ECR_ACCOUNT_URL}/nginx:${CIRCLE_SHA1}'
