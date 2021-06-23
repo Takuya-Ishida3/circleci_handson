@@ -1,0 +1,22 @@
+{
+  "name": "circleci_handson",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "TZ='Asia/Tokyo' jest",
+    "start:ci": "serve --no-clipboard --listen ${PORT:-8080}",
+    "cy:verify": "cypress verify",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jest": "^27.0.5",
+    "serve": "^12.0.0"
+  },
+  "devDependencies": {
+    "cypress": "^7.5.0"
+  }
+}

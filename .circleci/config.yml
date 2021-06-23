@@ -1,14 +1,46 @@
 version: 2.1
+jobs:
+  build_test:
+    docker: 
+      - image: cypress/base:10
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Run unit test
+          command: npm run test
+      - run:
+          name: verify Cypress is installed correctly
+          command: npm run cy:verify
+      - run:
+          name: Create cypress.json
+          command: |
+              echo "{\"projectId\": \"${CYPRESS_PROJECT_ID}\"}" > cypress.json 
+      - run:
+          name: Start server before starting tests
+          command: npm run start:ci
+          background: true
+      - run:
+          name: Run e2e test
+          command: npx cypress run --record --key ${CYPRESS_RECORD_KEY}
 orbs:
   aws-ecr: circleci/aws-ecr@6.10.0
   aws-ecs: circleci/aws-ecs@1.2.0
 workflows:
   build-and-deploy:
     jobs:
+      - build_test
       - aws-ecr/build-and-push-image:
           account-url: AWS_ECR_ACCOUNT_URL
           repo: 'nginx'
           tag: '${CIRCLE_SHA1}'
+          requires:
+            - build_test
+          filters:
+            branches:
+              only: main
       - aws-ecs/deploy-service-update:
           requires:
             - aws-ecr/build-and-push-image
@@ -16,3 +48,6 @@ workflows:
           service-name: 'circleci-book-service'
           cluster-name: 'circleci-book-cluster'
           container-image-name-updates: 'container=circleci-book-container,image-and-tag=${AWS_ECR_ACCOUNT_URL}/nginx:${CIRCLE_SHA1}'
+          filters:
+            branches:
+              only: main
